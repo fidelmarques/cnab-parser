@@ -1,0 +1,149 @@
+openapi: 3.0.3
+info:
+  title: CNAB Parser
+  version: 1.0.0
+  description: Parser for CNAB text files.
+paths:
+  /api/file/:
+    get:
+      operationId: file_list
+      tags:
+        - file
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/File"
+          description: ""
+    post:
+      operationId: file_create
+      tags:
+        - file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/File"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/File"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/File"
+        required: true
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+          description: ""
+  /api/transactions/:
+    get:
+      operationId: transactions_list
+      tags:
+        - transactions
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+          description: ""
+    post:
+      operationId: transactions_create
+      tags:
+        - transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transaction"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Transaction"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Transaction"
+        required: true
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+          description: ""
+components:
+  schemas:
+    File:
+      type: object
+      properties:
+        file:
+          type: string
+          format: uri
+      required:
+        - file
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          type: integer
+          maximum: 9
+          minimum: 1
+        date:
+          type: string
+          format: date
+        value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        cpf:
+          type: string
+        hour:
+          type: string
+          format: time
+        shop_owner:
+          type: string
+        shop_name:
+          type: string
+      required:
+        - cpf
+        - date
+        - hour
+        - id
+        - shop_name
+        - shop_owner
+        - type
+        - value
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
